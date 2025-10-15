@@ -51,15 +51,17 @@ jobs:
                   key: ${{ secrets.EC2_SSH_KEY }}
                   script_stop: true
                   script: |
+                      sudo apt update
+                      sudo apt install -y python3-venv
+
                       cd /home/${{ secrets.EC2_USER }}/backend
 
                       python3 -m venv .venv || true
                       source .venv/bin/activate
-
 
                       python -m pip install --upgrade pip
                       pip install -r requirements.txt
 
                       fuser -k 8000/tcp || true
                       nohup python manage.py runserver 0.0.0.0:8000 > logs.out 2>&1 &
-                      echo "Deployment complete and server restarted!"
+                      echo "Deployment complete and server restarted!"
